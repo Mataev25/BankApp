@@ -1,7 +1,8 @@
 ﻿using System;
+using BankApp;
 
 class Program {
     static void Main() {
-        Console.WriteLine("Hello");
+        UserTests.Run();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 namespace BankApp.Models {
     public class User {
         private string fName;
@@ -40,9 +41,8 @@ namespace BankApp.Models {
             get {return phone;}
             set {
                 string cleaned = "";
-                foreach (int c in value) {
-                    if (char.IsDigit(c) || c == '+' || c == ' '
-                        || c == '(' || c == ')' || c == '-')
+                foreach (char c in value) {
+                    if (char.IsDigit(c) || c == '+')
                         cleaned += c;
                 }
 
@@ -52,5 +52,29 @@ namespace BankApp.Models {
                 phone = cleaned; 
             }
         }
+
+        public string PinHash {
+            get {return pinHash;}
+            set {
+                if (string.IsNullOrEmpty(value)) {
+                    throw new ArgumentException("PIN-code не может быть пустым");
+                }
+                if (value.Length != 64) {
+                    throw new ArgumentException("Неверный формат хеша PIN-code");
+                }
+
+                pinHash = value;
+            }
+        }
+
+        public bool IsFirstLogin {
+            get {return firstLogin;}
+            set {firstLogin = value;}
+        }
+
+        public DateTime CreatedAt {
+            get {return createAt;}
+            set {createAt = value;}
+        } 
     }
 }
