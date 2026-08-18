@@ -67,8 +67,5 @@ namespace BankApp {
             }
             Console.WriteLine();
         }
-
     }
-
-
 }

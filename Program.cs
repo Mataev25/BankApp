@@ -1,8 +1,11 @@
 ﻿using System;
-using BankApp;
+using BankApp.Data;
+using BankApp.Tests;
 
 class Program {
     static void Main() {
-        UserTests.Run();
+        //UserTests.Run();
+        Database.Seed();
+        AuthTests.Run();
     }
 }

@@ -1,0 +1,4 @@
+#CardNumber|UserId|IsActive|FailedAttempts|IsBlocked
+1234-5678-9010-1112|1|true|0|false
+2345-6789-1011-1213|3|true|0|false
+3456-7891-0111-2131|2|true|0|false

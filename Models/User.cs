@@ -59,9 +59,9 @@ namespace BankApp.Models {
                 if (string.IsNullOrEmpty(value)) {
                     throw new ArgumentException("PIN-code не может быть пустым");
                 }
-                if (value.Length != 64) {
+                /*if (value.Length != 64) {
                     throw new ArgumentException("Неверный формат хеша PIN-code");
-                }
+                }*/
 
                 pinHash = value;
             }
