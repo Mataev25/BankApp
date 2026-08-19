@@ -7,10 +7,13 @@ namespace BankApp.Data {
     public static class Database {
         public static List<User> Users = new List<User>();
         public static List<Card> Cards = new List<Card>();
+        public static List<Account> Accounts = new List<Account>();
+        private static int nextAccountId = 1;
 
         public static void Seed() {
             LoadUsers();
             LoadCards();
+            LoadAccounts();
         }
 
         private static void LoadUsers() {
@@ -65,6 +68,32 @@ namespace BankApp.Data {
             }
         }
 
+        private static void LoadAccounts() {
+            string path = "Data/accounts.txt";
+            if (!File.Exists(path)) {
+                Console.WriteLine("Файл accounts.txt не найден.");
+                return;   
+            }
+
+            string[] lines = File.ReadAllLines(path);
+            foreach (string line in lines) {
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                    continue;
+
+                string[] parts = line.Split('|');
+                if (parts.Length != 4) continue;
+
+                Account account = new Account(int.Parse(parts[1]), parts[2]);
+                account.Id = int.Parse(parts[0]);
+                account.Balance = decimal.Parse(parts[3]);
+
+                Accounts.Add(account);
+
+                if (account.Id >= nextAccountId)
+                    nextAccountId = account.Id + 1;
+            }
+        }
+
         public static void SaveUsers() {
             string path = "Data/users.txt";
             StreamWriter writer = null;
@@ -74,6 +103,20 @@ namespace BankApp.Data {
                 foreach (User user in Users) 
                     writer.WriteLine($"{user.Id}|{user.FullName}|{user.Phone}|{user.IsFirstLogin}");
                 
+            } finally {
+                if (writer != null)
+                    writer.Close();
+            }
+        }
+
+        public static void SaveAccounts() {
+            string path = "Data/accounts.txt";
+            StreamWriter writer = null;
+            try {
+                writer = new StreamWriter(path);
+                writer.WriteLine("#Id|UserId|AccountNumber|Balance");
+                foreach (Account account in Accounts)
+                    writer.WriteLine($"{account.Id}|{account.UserId}|{account.AccountNumber}|{account.Balance}");
             } finally {
                 if (writer != null)
                     writer.Close();
