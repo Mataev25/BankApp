@@ -43,6 +43,7 @@ namespace BankApp.Services {
             if (user.IsFirstLogin) {
                 user.PinHash = pin;
                 user.IsFirstLogin = false;
+                Database.SaveUsers();
                 return true;
             }
             return false;

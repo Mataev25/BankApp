@@ -64,5 +64,20 @@ namespace BankApp.Data {
                 Cards.Add(card);
             }
         }
+
+        public static void SaveUsers() {
+            string path = "Data/users.txt";
+            StreamWriter writer = null;
+            try {
+                writer = new StreamWriter(path);
+                writer.WriteLine("#UserId|FullName|Phone|IsFirstLogin");
+                foreach (User user in Users) 
+                    writer.WriteLine($"{user.Id}|{user.FullName}|{user.Phone}|{user.IsFirstLogin}");
+                
+            } finally {
+                if (writer != null)
+                    writer.Close();
+            }
+        }
     }
 }
