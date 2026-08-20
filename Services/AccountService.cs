@@ -32,6 +32,9 @@ namespace BankApp.Services {
 
             account.Balance += amount;
             Database.SaveAccounts();
+
+            Database.AddTransaction(userId, "Deposit", amount, $"Пополнение счета {account.AccountNumber}");
+
             Console.WriteLine($"Счет пополнен на {amount} р. Текущий баланс: {account.Balance} р.");
             return true;
         }
@@ -55,6 +58,8 @@ namespace BankApp.Services {
 
             account.Balance -= amount;
             Database.SaveAccounts();
+            Database.AddTransaction(userId, "Deposit", amount, $"Снятие со счета {account.AccountNumber}");
+            
             Console.WriteLine($"Снято: {amount} р. Текущий баланс: {account.Balance} р.");
             return true;
         }

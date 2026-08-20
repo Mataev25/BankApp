@@ -1,6 +1,8 @@
 using System;
 using BankApp.Models;
 using BankApp.Services;
+using System.Collections.Generic;
+using BankApp.Data;
 
 namespace BankApp.UI {
     public class ConsoleMenu : IMenu {
@@ -97,7 +99,8 @@ namespace BankApp.UI {
             Console.WriteLine("#1 Просмотр баланса");
             Console.WriteLine("#2 Пополнение счета");
             Console.WriteLine("#3 Снятие наличных");
-            Console.WriteLine("#4 Выход из аккаунта");
+            Console.WriteLine("#4 История операций");
+            Console.WriteLine("#5 Выход из аккаунта");
             Console.Write("Выберите действие: ");
 
             string choice = Console.ReadLine();
@@ -105,7 +108,8 @@ namespace BankApp.UI {
                 case "1" : ShowBalance(); break;
                 case "2" : ShowDeposit(); break;
                 case "3" : ShowWithdraw(); break;
-                case "4" :
+                case "4" : ShowTransactionHistory(); break;
+                case "5" : 
                     currentUser = null;
                     Console.WriteLine("Вы вышли из аккаунта.");
                     ShowAuthMenu();
@@ -128,6 +132,7 @@ namespace BankApp.UI {
             Console.WriteLine($"Баланс: {balance} р.");
             Console.Write("Нажмите Enter для продолжения...");
             Console.ReadLine();
+            ShowAccountMenu();
         }
 
         private void ShowDeposit() {
@@ -149,6 +154,7 @@ namespace BankApp.UI {
             accountService.Deposit(currentUser.Id, amount);
             Console.WriteLine("Нажминте Enter для продолжения...");
             Console.ReadLine();
+            ShowAccountMenu();
         }
 
         private void ShowWithdraw() {
@@ -169,7 +175,35 @@ namespace BankApp.UI {
             accountService.Withdraw(currentUser.Id, amount);
             Console.WriteLine("Нажминте Enter для продолжения...");
             Console.ReadLine();
-            
+            ShowAccountMenu();
+        }
+
+        private void ShowTransactionHistory() {
+            if (currentUser == null) {
+                Console.WriteLine("Пользователь не авторизован");
+                ShowAuthMenu();
+                return;
+            }
+            Console.WriteLine("\n***** История операций *****");
+
+            List<Transaction> userTransactions = new List<Transaction>();
+            foreach (Transaction trans in Database.Transactions) {
+                if (trans.UserId == currentUser.Id)
+                    userTransactions.Add(trans);
+            }
+
+            if (userTransactions.Count == 0)
+                Console.WriteLine("Операций пока нет");
+            else {
+                int count = userTransactions.Count > 10 ? 10 : userTransactions.Count;
+                for (int i = userTransactions.Count-1; i >= userTransactions.Count-count; i--) {
+                    Transaction t = userTransactions[i];
+                    Console.WriteLine($"{t.Date:dd.MM.yyyy HH:mm} | {t.Type} | {t.Amount} р. {t.Description}"); 
+                }
+            }
+            Console.WriteLine("Нажминте Enter для продолжения...");
+            Console.ReadLine();
+            ShowAccountMenu();
         }
 
         public void ShowMainMenu() {
