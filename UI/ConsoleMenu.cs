@@ -148,6 +148,7 @@ namespace BankApp.UI {
                 Console.WriteLine("Неверный формат суммы.");
                 Console.WriteLine("Нажминте Enter для продолжения...");
                 Console.ReadLine();
+                ShowAccountMenu();
                 return;
             }
 
@@ -169,6 +170,7 @@ namespace BankApp.UI {
                 Console.WriteLine("Неверный формат суммы.");
                 Console.WriteLine("Нажминте Enter для продолжения...");
                 Console.ReadLine();
+                ShowAccountMenu();
                 return;
             }
 

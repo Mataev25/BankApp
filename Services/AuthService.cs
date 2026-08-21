@@ -33,7 +33,9 @@ namespace BankApp.Services {
         public bool ValidatePin(string cardNumber, string pin) {
             User user = GetUserByCard(cardNumber);
             if (user == null) return false;
-            return user.PinHash == pin;
+
+            string hashedPin = HashHelper.HashPassword(pin);
+            return user.PinHash == hashedPin;
         }
 
         public bool ActivateCard(string cardNumber, string pin) {
@@ -41,7 +43,7 @@ namespace BankApp.Services {
             if (user == null) return false;
             
             if (user.IsFirstLogin) {
-                user.PinHash = pin;
+                user.PinHash = HashHelper.HashPassword(pin);
                 user.IsFirstLogin = false;
                 Database.SaveUsers();
                 return true;

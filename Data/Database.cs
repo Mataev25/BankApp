@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using BankApp.Models;
+using BankApp.Services;
 
 namespace BankApp.Data {
     public static class Database {
@@ -18,6 +19,7 @@ namespace BankApp.Data {
             LoadCards();
             LoadAccounts();
             LoadTransactions();
+            MigratePins();
         }
 
         private static void LoadUsers() {
@@ -176,6 +178,14 @@ namespace BankApp.Data {
             trans.Id = nextTransactionId++;
             Transactions.Add(trans);
             SaveTransactions();
+        }
+
+        public static void MigratePins() {
+            foreach (User user in Users) {
+                if (!string.IsNullOrEmpty(user.PinHash) && user.PinHash.Length < 64)
+                    user.PinHash = HashHelper.HashPassword(user.PinHash);
+            }
+            SaveUsers();
         }
     }
 }
