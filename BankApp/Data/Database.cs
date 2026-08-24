@@ -23,7 +23,7 @@ namespace BankApp.Data {
         }
 
         private static void LoadUsers() {
-            string path = "Data/users.txt";
+            string path = "BankApp/Data/users.txt";
             if (!File.Exists(path)) {
                 Console.WriteLine("Файл users.txt не найден.");
                 return;
@@ -50,7 +50,7 @@ namespace BankApp.Data {
         }
 
         private static void LoadCards() {
-            string path = "Data/cards.txt";
+            string path = "BankApp/Data/cards.txt";
             if (!File.Exists(path)) {
                 Console.WriteLine("Файл cards.txt не найден.");
                 return;
@@ -76,7 +76,7 @@ namespace BankApp.Data {
         }
 
         private static void LoadAccounts() {
-            string path = "Data/accounts.txt";
+            string path = "BankApp/Data/accounts.txt";
             if (!File.Exists(path)) {
                 Console.WriteLine("Файл accounts.txt не найден.");
                 return;   
@@ -102,7 +102,7 @@ namespace BankApp.Data {
         }
 
         private static void LoadTransactions() {
-            string path = "Data/transactions.txt";
+            string path = "BankApp/Data/transactions.txt";
             if (!File.Exists(path)) {
                 Console.WriteLine("Файл transactions.txt не найден.");
                 return;
@@ -132,7 +132,7 @@ namespace BankApp.Data {
         }
 
         public static void SaveUsers() {
-            string path = "Data/users.txt";
+            string path = "BankApp/Data/users.txt";
             StreamWriter writer = null;
             try {
                 writer = new StreamWriter(path);
@@ -147,7 +147,7 @@ namespace BankApp.Data {
         }
 
         public static void SaveAccounts() {
-            string path = "Data/accounts.txt";
+            string path = "BankApp/Data/accounts.txt";
             StreamWriter writer = null;
             try {
                 writer = new StreamWriter(path);
@@ -161,7 +161,7 @@ namespace BankApp.Data {
         }
 
         public static void SaveTransactions() {
-            string path = "Data/transactions.txt";
+            string path = "BankApp/Data/transactions.txt";
             StreamWriter writer = null;
             try {
                 writer = new StreamWriter(path);

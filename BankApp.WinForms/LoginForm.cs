@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using BankApp.Services;
 using BankApp.Models;
+using BankApp.Data;
 
 namespace BankApp.WinForms {
     public partial class LoginForm : Form {
@@ -99,7 +100,7 @@ namespace BankApp.WinForms {
             authService.ResetFailedAttempts(cardNumber);
             MessageBox.Show($"Добро пожаловать, {user.FullName}!", "Успех");
 
-            MainForm mainForm = new MainForm(user);
+            MainForm mainForm = new MainForm(user, this);
             mainForm.Show();
             this.Hide();
         }

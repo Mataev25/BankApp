@@ -7,6 +7,7 @@ namespace BankApp.WinForms {
     public partial class MainForm : Form {
         private User currentUser;
         private AccountService accountService;
+        private LoginForm loginForm;
 
         private Label lblWelcome;
         private Label lblBalance;
@@ -15,11 +16,13 @@ namespace BankApp.WinForms {
         private Button btnHistory;
         private Button btnLogout;
 
-        public MainForm(User user) {
+        public MainForm(User user, LoginForm loginForm) {
             currentUser = user;
+            this.loginForm = loginForm;
             accountService = new AccountService();
             //InitializeComponent();
             SetupUI();
+            this.FormClosing += MainForm_FormClosing;
         }
 
         private void SetupUI() {
@@ -74,12 +77,14 @@ namespace BankApp.WinForms {
 
         private void DepoisitButton_Click(object sender, EventArgs e) {
             TransactionForm transForm = new TransactionForm(currentUser.Id, "Deposit");
+            transForm.TransactionCompleted += OnTransactionCompleted;
             transForm.ShowDialog();
             RefreshBalance(); 
         }
 
         private void WithdrawButton_Click(object sender, EventArgs e) {
             TransactionForm transForm = new TransactionForm(currentUser.Id, "Withdraw");
+            transForm.TransactionCompleted += OnTransactionCompleted;
             transForm.ShowDialog();
             RefreshBalance(); 
         }
@@ -91,13 +96,21 @@ namespace BankApp.WinForms {
 
         private void LogoutButton_Click(object sender, EventArgs e) {
             this.Close();
-            LoginForm loginForm = new LoginForm();
+            //LoginForm loginForm = new LoginForm();
             loginForm.Show(); 
+        }
+
+        private void OnTransactionCompleted(object sender, EventArgs e) {
+            RefreshBalance();
         }
 
         private void RefreshBalance() {
             decimal balance = accountService.GetBalance(currentUser.Id);
             lblBalance.Text = $"Баланс: {balance} р.";
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+            Application.Exit();
         }
 
     }
