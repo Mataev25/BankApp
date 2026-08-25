@@ -48,14 +48,10 @@ namespace BankApp.WinForms {
         }
 
         private void BtnOk_Click(object sender, EventArgs e) {
-            MessageBox.Show("Кнопка OK нажата");   
-
             if (!decimal.TryParse(txtAmount.Text, out decimal amount) || amount <= 0) {
                 MessageBox.Show("Введите корректную сумму.", "Ошибка");
                 return;
             }
-
-            MessageBox.Show($"Сумма: {amount}");  
 
             bool success = false;
             if (type == "Deposit")
@@ -63,9 +59,7 @@ namespace BankApp.WinForms {
             else
                 success = acc.Withdraw(userId, amount);
 
-            
-            MessageBox.Show($"Результат операции: {success}");   
-            
+
             if (success) {
                 MessageBox.Show("Операция выполнена успешно.", "Успех");
                 TransactionCompleted?.Invoke(this, EventArgs.Empty);
