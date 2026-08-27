@@ -150,7 +150,7 @@ namespace BankApp.Data {
             string path = "BankApp/Data/accounts.txt";
             StreamWriter writer = null;
             try {
-                writer = new StreamWriter(path);
+                writer = new StreamWriter(path, false);
                 writer.WriteLine("#Id|UserId|AccountNumber|Balance");
                 foreach (Account account in Accounts)
                     writer.WriteLine($"{account.Id}|{account.UserId}|{account.AccountNumber}|{account.Balance}");
