@@ -8,18 +8,27 @@ namespace BankApp.Tests {
         public static void Run() {
             Console.WriteLine("Тестирование класса AccountService\n");
             
-            Database.Seed();
+            AppDbContext context = null;
+            AccountService acc = null;
 
-            TestGetBalance();
-            TestDeposit();
-            TestWithdraw();
-            TestWithdrawInsufficientFunds();
-            TestNegativeAmount();
+            try {
+                context = new AppDbContext();
+                DbInitializer.Seed(context);
+                acc = new AccountService(context);
+
+                TestGetBalance(acc);
+                TestDeposit(acc);
+                TestWithdraw(acc);
+                TestWithdrawInsufficientFunds(acc);
+                TestNegativeAmount(acc);
+            } finally {
+                if (context != null)
+                    context.Dispose();
+            }
         }
 
-        private static void TestGetBalance() {
+        private static void TestGetBalance(AccountService acc) {
             Console.WriteLine("#1 Тест: получение баланса");
-            AccountService acc = new AccountService();
             decimal balance = acc.GetBalance(1);
             
             if (balance == 70000)
@@ -29,9 +38,8 @@ namespace BankApp.Tests {
             Console.WriteLine();
         }
 
-        private static void TestDeposit() {
+        private static void TestDeposit(AccountService acc) {
             Console.WriteLine("#2 Тест: пополнение счета");
-            AccountService acc = new AccountService();
             decimal before = acc.GetBalance(1);
             bool result = acc.Deposit(1, 5000);
             decimal after = acc.GetBalance(1);
@@ -44,9 +52,8 @@ namespace BankApp.Tests {
 
         }
 
-        private static void TestWithdraw() {
+        private static void TestWithdraw(AccountService acc) {
             Console.WriteLine("#3 Тест: снятие наличных");
-            AccountService acc = new AccountService();
             decimal before = acc.GetBalance(1);
             bool result = acc.Withdraw(1, 30000);
             decimal after = acc.GetBalance(1);
@@ -58,9 +65,8 @@ namespace BankApp.Tests {
             Console.WriteLine();
         }
 
-        private static void TestWithdrawInsufficientFunds() {
+        private static void TestWithdrawInsufficientFunds(AccountService acc) {
             Console.WriteLine("#4 Тест: снятие при недостатке средств");
-            AccountService acc = new AccountService();
             decimal before = acc.GetBalance(1);
             bool result = acc.Withdraw(1, 98989898);
             decimal after = acc.GetBalance(1);
@@ -72,9 +78,8 @@ namespace BankApp.Tests {
             Console.WriteLine();
         }
 
-        private static void TestNegativeAmount() {
+        private static void TestNegativeAmount(AccountService acc) {
             Console.WriteLine("#5 Тест: отрицательная сумма");
-            AccountService acc = new AccountService();
             decimal before = acc.GetBalance(1);
             bool result = acc.Deposit(1, -1000);
             decimal after = acc.GetBalance(1);

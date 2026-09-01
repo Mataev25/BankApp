@@ -8,19 +8,29 @@ namespace BankApp.Tests {
         public static void Run() {
             Console.WriteLine("Тестирование AuthService");
 
-            Database.Seed();
+            AppDbContext context = null;
+            AuthService auth = null;
 
-            TestCardExists();
-            TestGetUserByCard();
-            TestActivateCard();
-            TestValidatePin();
-            TestFailedAttempts();
-            TestCardBlocking();
+            try {
+                context = new AppDbContext();
+                DbInitializer.Seed(context);
+                auth = new AuthService(context);
+
+                TestCardExists(auth);
+                TestGetUserByCard(auth);
+                TestActivateCard(auth);
+                TestValidatePin(auth);
+                TestFailedAttempts(auth);
+                TestCardBlocking(auth);
+            } finally {
+                if (context != null)
+                    context.Dispose();
+            }
+
         }
 
-        private static void TestCardExists() {
+        private static void TestCardExists(AuthService auth) {
             Console.WriteLine("#1 Тест: проверка существования карты\n");
-            AuthService auth = new AuthService();
             
             if (auth.CardExists("1234-5678-9010-1112"))
                 Console.WriteLine("Существующая карта найдена.");
@@ -35,9 +45,8 @@ namespace BankApp.Tests {
             Console.WriteLine();
         }
 
-        private static void TestGetUserByCard() {
+        private static void TestGetUserByCard(AuthService auth) {
             Console.WriteLine("#2 Тест: получение пользователя по карте\n");
-            AuthService auth = new AuthService();
 
             User user = auth.GetUserByCard("1234-5678-9010-1112");
             if (user != null && user.FullName == "Матаев Игорь") 
@@ -48,9 +57,8 @@ namespace BankApp.Tests {
             Console.WriteLine();
         }
 
-        private static void TestActivateCard() {
+        private static void TestActivateCard(AuthService auth) {
             Console.WriteLine("#3 Тест: активация карты");
-            AuthService auth = new AuthService();
             bool result = auth.ActivateCard("1234-5678-9010-1112", "1234");
 
             if (result)
@@ -62,9 +70,8 @@ namespace BankApp.Tests {
 
         }
 
-        private static void TestValidatePin() {
+        private static void TestValidatePin(AuthService auth) {
             Console.WriteLine("#4 Тест: проверка PIN-кода");
-            AuthService auth = new AuthService();
 
             bool valid = auth.ValidatePin("1234-5678-9010-1112", "1234");
             if (valid) 
@@ -81,9 +88,8 @@ namespace BankApp.Tests {
             Console.WriteLine();
         }
 
-        private static void TestFailedAttempts() {
+        private static void TestFailedAttempts(AuthService auth) {
             Console.WriteLine("#5 Тест: неудачные попытки ввыода PIN-кода");
-            AuthService auth = new AuthService();
             
             auth.ResetFailedAttempts("1234-5678-9010-1112");
             for (int i=1; i<=3; i++) {
@@ -94,9 +100,8 @@ namespace BankApp.Tests {
             Console.WriteLine();
         }
 
-        private static bool TestCardBlocking() {
+        private static bool TestCardBlocking(AuthService auth) {
             Console.WriteLine("#6 Тест: блокировка карты");
-            AuthService auth = new AuthService();
 
             if (auth.IsCardBlocked("1234-5678-9010-1112")) {
                 Console.WriteLine("Карта заблокирвана\n");

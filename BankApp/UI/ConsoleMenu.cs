@@ -9,11 +9,14 @@ namespace BankApp.UI {
         private AuthService authService;
         private User currentUser;
         private AccountService accountService;
+        private AppDbContext context;
 
         public ConsoleMenu() {
-            authService = new AuthService();
+            context = new AppDbContext();
+            authService = new AuthService(context);
             currentUser = null;
-            accountService = new AccountService();
+            accountService = new AccountService(context);
+
         }
 
         public void Run() {
@@ -189,7 +192,7 @@ namespace BankApp.UI {
             Console.WriteLine("\n***** История операций *****");
 
             List<Transaction> userTransactions = new List<Transaction>();
-            foreach (Transaction trans in Database.Transactions) {
+            foreach (Transaction trans in context.Transactions) {
                 if (trans.UserId == currentUser.Id)
                     userTransactions.Add(trans);
             }

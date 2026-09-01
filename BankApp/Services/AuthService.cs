@@ -4,8 +4,13 @@ using BankApp.Data;
 
 namespace BankApp.Services {
     public class AuthService {
+        private AppDbContext context;
+
+        public AuthService(AppDbContext context) {
+            this.context = context;
+        }
         public bool CardExists(string cardNumber) {
-            foreach (Card card in Database.Cards) {
+            foreach (Card card in context.Cards) {
                 if (card.Number == cardNumber)
                     return true;
             }
@@ -14,7 +19,7 @@ namespace BankApp.Services {
 
         public User GetUserByCard(string cardNumber) {
             Card card = null;
-            foreach (Card c in Database.Cards) {
+            foreach (Card c in context.Cards) {
                 if (c.Number == cardNumber) {
                     card = c;
                     break;
@@ -23,7 +28,7 @@ namespace BankApp.Services {
 
             if (card == null) return null;
 
-            foreach (User user in Database.Users) {
+            foreach (User user in context.Users) {
                 if (user.Id == card.UserId)
                     return user;
             }
@@ -45,14 +50,14 @@ namespace BankApp.Services {
             if (user.IsFirstLogin) {
                 user.PinHash = HashHelper.HashPassword(pin);
                 user.IsFirstLogin = false;
-                Database.SaveUsers();
+                context.SaveChanges();
                 return true;
             }
             return false;
         }
 
         public void IncrementFailedAttempts(string cardNumber) {
-            foreach (Card card in Database.Cards) {
+            foreach (Card card in context.Cards) {
                 if (card.Number == cardNumber) {
                     card.FailedAttempts++;
                     if (card.FailedAttempts >= 3) 
@@ -60,10 +65,11 @@ namespace BankApp.Services {
                     break;
                 }
             }
+            context.SaveChanges();
         }
 
         public bool IsCardBlocked(string cardNumber) {
-            foreach (Card card in Database.Cards) {
+            foreach (Card card in context.Cards) {
                 if (card.Number == cardNumber)
                     return card.IsBlocked;
             }
@@ -71,17 +77,18 @@ namespace BankApp.Services {
         }
 
         public void ResetFailedAttempts(string cardNumber) {
-            foreach (Card card in Database.Cards) {
+            foreach (Card card in context.Cards) {
                 if (card.Number == cardNumber) {
                     card.FailedAttempts = 0;
                     break;
                 }
             }
+            context.SaveChanges();
         }
 
         //Вспомогательный метод для тестов.
          public Card GetCardByNumber(string cardNumber) {
-            foreach (Card card in Database.Cards) {
+            foreach (Card card in context.Cards) {
                 if (card.Number == cardNumber) 
                     return card;
             }

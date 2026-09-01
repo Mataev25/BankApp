@@ -2,6 +2,7 @@ using System;
 
 namespace BankApp.Models {
     public class Card {
+        public int Id {get; set;}
         private string number = "";
         private int userId;
         private bool isActive;

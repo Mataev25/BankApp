@@ -4,8 +4,14 @@ using BankApp.Data;
 
 namespace BankApp.Services {
     public class AccountService {
+        private AppDbContext context;
+
+        public AccountService(AppDbContext context) {
+            this.context = context;
+        }
+
         public Account GetAccountByUserId(int userId) {
-            foreach (Account account in Database.Accounts) {
+            foreach (Account account in context.Accounts) {
                 if (account.UserId == userId)
                     return account;
             }
@@ -31,9 +37,12 @@ namespace BankApp.Services {
             }
 
             account.Balance += amount;
-            Database.SaveAccounts();
 
-            Database.AddTransaction(userId, "Deposit", amount, $"Пополнение счета {account.AccountNumber}");
+            Transaction trans = new Transaction(userId, "Deposit", amount, $"Пополнение счета {account.AccountNumber}");
+            trans.Date = DateTime.Now;
+            context.Transactions.Add(trans);
+
+            context.SaveChanges();
 
             Console.WriteLine($"Счет пополнен на {amount} р. Текущий баланс: {account.Balance} р.");
             return true;
@@ -57,9 +66,13 @@ namespace BankApp.Services {
             }
 
             account.Balance -= amount;
-            Database.SaveAccounts();
-            Database.AddTransaction(userId, "Deposit", amount, $"Снятие со счета {account.AccountNumber}");
-            
+
+            Transaction trans = new Transaction(userId, "Withdraw", amount, $"Снятие со счета {account.AccountNumber}");
+            trans.Date = DateTime.Now;
+            context.Transactions.Add(trans);
+
+            context.SaveChanges();
+    
             Console.WriteLine($"Снято: {amount} р. Текущий баланс: {account.Balance} р.");
             return true;
         }
