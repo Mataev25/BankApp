@@ -38,7 +38,9 @@ class Program {
         var data = reportService.GetUserCardBalanceReport();
 
         string baseName = $"report_{DateTime.Now:yyyyMMdd_HHmmss}";
-        string folder = Environment.CurrentDirectory;
+        string root = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        string folder = Path.Combine(Environment.CurrentDirectory, "Reports");
+        Directory.CreateDirectory(folder);
 
         reportService.SaveToTxt(data, Path.Combine(folder, baseName + ".txt"));
         reportService.SaveToCsv(data, Path.Combine(folder, baseName + ".csv"));
