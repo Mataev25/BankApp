@@ -46,6 +46,11 @@ namespace BankApp.Services {
         public bool ActivateCard(string cardNumber, string pin) {
             User user = GetUserByCard(cardNumber);
             if (user == null) return false;
+
+            if (string.IsNullOrEmpty(pin) || pin.Length != 4 || !IsDigitsOnly(pin)) {
+                Console.WriteLine("PIN должен состоять из 4 цифр!");
+                return false;
+            }
             
             if (user.IsFirstLogin) {
                 user.PinHash = HashHelper.HashPassword(pin);
@@ -93,6 +98,14 @@ namespace BankApp.Services {
                     return card;
             }
             return null;
+        }
+
+        //Вспомогательный метод для проверки, что в строке только цифры
+        private bool IsDigitsOnly(string str) {
+            foreach (char c in str)
+                if (c < '0' || c > '9')
+                    return false;
+            return true;
         }
     }
 }

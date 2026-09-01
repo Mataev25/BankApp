@@ -6,6 +6,7 @@ using BankApp.UI;
 using BankApp;
 using System.IO;
 using BankApp.Services;
+using System.Collections.Generic;
 
 class Program {
     static void Main(string[] args) {
@@ -42,13 +43,28 @@ class Program {
         string folder = Path.Combine(Environment.CurrentDirectory, "Reports");
         Directory.CreateDirectory(folder);
 
-        reportService.SaveToTxt(data, Path.Combine(folder, baseName + ".txt"));
-        reportService.SaveToCsv(data, Path.Combine(folder, baseName + ".csv"));
-        reportService.SaveToJson(data, Path.Combine(folder, baseName + ".json"));
+        ShowReportInConsole(data);
+        Console.Write("\nСохранить отчет в файлы? (y/n:) ");
+        string ans = Console.ReadLine();
 
-        Console.WriteLine($" Отчеты сохранены в папку {folder}");
-        Console.WriteLine($"     -{baseName}.txt");
-        Console.WriteLine($"     -{baseName}.csv");
-        Console.WriteLine($"     -{baseName}.json");
+        if (ans == "y") {
+            reportService.SaveToTxt(data, Path.Combine(folder, baseName + ".txt"));
+            reportService.SaveToCsv(data, Path.Combine(folder, baseName + ".csv"));
+            reportService.SaveToJson(data, Path.Combine(folder, baseName + ".json"));
+
+            Console.WriteLine($" Отчеты сохранены в папку {folder}");
+            Console.WriteLine($"     -{baseName}.txt");
+            Console.WriteLine($"     -{baseName}.csv");
+            Console.WriteLine($"     -{baseName}.json");
+        }
+    }
+
+    static void ShowReportInConsole(List<UserCardBalance> data) {
+        Console.WriteLine("===== Отчет: пользователи, карты, балансы ======");
+        Console.WriteLine($"{"Имя",-30} {"Карта",-20} {"Баланс",12:F2}");
+        Console.WriteLine(new string('-', 70));
+
+        foreach (var row in data)
+            Console.WriteLine($"{row.FullName,-30} {row.CardNumber,-20} {row.Balance,12:F2}");
     }
 }
