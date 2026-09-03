@@ -38,13 +38,20 @@ namespace BankApp.Services {
 
             account.Balance += amount;
 
-            Transaction trans = new Transaction(userId, "Deposit", amount, $"Пополнение счета {account.AccountNumber}");
+            Transaction trans = new Transaction(
+                                userId,
+                                "Deposit", 
+                                amount,
+                                $"Пополнение счета {account.AccountNumber}");
+
             trans.Date = DateTime.Now;
             context.Transactions.Add(trans);
 
             context.SaveChanges();
 
-            Console.WriteLine($"Счет пополнен на {amount} р. Текущий баланс: {account.Balance} р.");
+            Console.WriteLine(
+                $"Счет пополнен на {amount} р. " +
+                $"Текущий баланс: {account.Balance} р.");
             return true;
         }
 
@@ -61,19 +68,28 @@ namespace BankApp.Services {
             }
 
             if (account.Balance < amount) {
-                Console.WriteLine($"Недостаточно средств. Доступно: {account.Balance} р.");
+                Console.WriteLine(
+                    $"Недостаточно средств. " +
+                    $"Доступно: {account.Balance} р.");
                 return false;
             }
 
             account.Balance -= amount;
 
-            Transaction trans = new Transaction(userId, "Withdraw", amount, $"Снятие со счета {account.AccountNumber}");
+            Transaction trans = new Transaction(
+                                userId,
+                                "Withdraw",
+                                amount,
+                                $"Снятие со счета {account.AccountNumber}");
+                                
             trans.Date = DateTime.Now;
             context.Transactions.Add(trans);
 
             context.SaveChanges();
     
-            Console.WriteLine($"Снято: {amount} р. Текущий баланс: {account.Balance} р.");
+            Console.WriteLine(
+                $"Снято: {amount} р. " +
+                $"Текущий баланс: {account.Balance} р.");
             return true;
         }
     }

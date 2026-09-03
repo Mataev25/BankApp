@@ -66,7 +66,10 @@ namespace BankApp.Services {
                 writer.WriteLine(new string('-', 70));
 
                 foreach (var row in data)
-                    writer.WriteLine($"{row.FullName,-30} {row.CardNumber,-20} {row.Balance,12:F2}");
+                    writer.WriteLine(
+                        $"{row.FullName,-30} " +
+                        $"{row.CardNumber,-20} " +
+                        $"{row.Balance,12:F2}");
             } finally {
                 if (writer != null) {
                     writer.Close();
@@ -81,7 +84,10 @@ namespace BankApp.Services {
                 writer = new StreamWriter(filePath);
                 writer.WriteLine("FullName, CardNumber, Balance");
                 foreach (var row in data)
-                    writer.WriteLine($"{row.FullName}, {row.CardNumber}, {row.Balance.ToString("F2")}");
+                    writer.WriteLine(
+                        $"{row.FullName} ",
+                        $"{row.CardNumber} ",
+                        $"{row.Balance.ToString("F2")}");
             } finally {
                 if (writer != null) {
                     writer.Close();
@@ -97,7 +103,11 @@ namespace BankApp.Services {
                 string json = JsonSerializer.Serialize(data, options);
                 byte[] bytes = Encoding.UTF8.GetBytes(json);
 
-                file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                file = new FileStream(
+                        filePath,
+                        FileMode.Create,
+                        FileAccess.Write);
+                        
                 file.Write(bytes, 0, bytes.Length);
             } finally {
                 if (file != null) {

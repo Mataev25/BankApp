@@ -47,7 +47,9 @@ namespace BankApp.Services {
             User user = GetUserByCard(cardNumber);
             if (user == null) return false;
 
-            if (string.IsNullOrEmpty(pin) || pin.Length != 4 || !IsDigitsOnly(pin)) {
+            if (string.IsNullOrEmpty(pin) || pin.Length != 4 ||
+                !IsDigitsOnly(pin)) {
+
                 Console.WriteLine("PIN должен состоять из 4 цифр!");
                 return false;
             }

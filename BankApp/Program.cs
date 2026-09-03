@@ -33,13 +33,21 @@ class Program {
     }
 
     static void GenerateReports() {
-        string connectString = "Server=localhost;DataBase=BankApp;Trusted_Connection=True;TrustServerCertificate=True;";
+        string connectString = "Server=localhost;DataBase=BankApp;" + 
+                                "User Id = sa;Password=SkiWaxFlah835;" + 
+                                "TrustServerCertificate=True;";
+
         var reportService = new ReportService(connectString);
         Console.WriteLine("Генерация отчетов...");
         var data = reportService.GetUserCardBalanceReport();
 
         string baseName = $"report_{DateTime.Now:yyyyMMdd_HHmmss}";
-        string root = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        string root = Directory
+            .GetParent(Environment.CurrentDirectory)
+            .Parent
+            .Parent
+            .FullName;
+
         string folder = Path.Combine(Environment.CurrentDirectory, "Reports");
         Directory.CreateDirectory(folder);
 

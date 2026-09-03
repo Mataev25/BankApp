@@ -8,8 +8,17 @@ namespace BankApp.Data {
         public DbSet<Account> Accounts {get; set;}
         public DbSet<Transaction> Transactions {get; set;}
 
+        public AppDbContext() { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseSqlServer("Server=localhost;Database=BankApp;Trusted_Connection=True; TrustServerCertificate=True");
+            if (!optionsBuilder.IsConfigured) {
+                optionsBuilder.UseSqlServer("Server=localhost;Database=BankApp;" + 
+                                            "User Id = sa;Password=SkiWaxFlah835;" + 
+                                            "TrustServerCertificate=True");
+            }
 
         }
     }
